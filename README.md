@@ -39,8 +39,11 @@ First output is: "Payments completed.xlsx " that file will contain all the loads
 
 Second output is: The files from trucker but with only loads paids inside the excel file and keeping the original names and files  to keep control of files.
 
+# ADVISE THIS ONLY WORKS WITH AN SPECIFIC FORMAT
+ 
+broker file you need to have a Load number and Amount in your excel files.
 
-
+trucker file you need to have a Date , Load number , Amount in your excel files.
 
 Copyright all rights reserve for contributors.
 
