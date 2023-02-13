@@ -11,7 +11,7 @@ Third excel file will be a convination of the two files mathcing the loads and t
 
 ## How To Use 
 
-* Requierements
+### Requierements
 
 The program needs 3 folders to exist in order to work  (broker, trucker, trucker_only_paid_loads)
 
@@ -22,7 +22,7 @@ The broker excel files in the folder "broker"
 The folder trucker_only_paid_loads it would be empty.
 
 
-* How to Run
+### How to Run
 
 1. Add the excel files into the specified folders 
 
@@ -31,7 +31,7 @@ The folder trucker_only_paid_loads it would be empty.
 3. Wait for output 
 
 
-* Expected Output
+### Expected Output
 
 The program will generate two outputs:
 
