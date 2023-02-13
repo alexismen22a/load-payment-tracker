@@ -45,6 +45,8 @@ broker file you need to have a Load number and Amount in your excel files.
 
 trucker file you need to have a Date , Load number , Amount in your excel files.
 
+! EDIT THE LABEL NAMES FROM THE load.py to mach your colum name !
+
 Copyright all rights reserve for contributors.
 
 Any use of this software in comercial use without autorization is prohibited and will required writing autorization from owners.
