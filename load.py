@@ -31,6 +31,7 @@ def generate_payments():
     trucker_date_col = 'DATE'
     trucker_total_amount_col = 'TOTAL'
     broker_total_amount_col = 'Amount paid on load'
+    broker_date_col = 'ACH Date'
 
     # Load all the trucker and broker files into dataframes
     trucker_files = []
@@ -42,14 +43,14 @@ def generate_payments():
 
     broker_files = []
     for filename in os.listdir(broker_folder_path):
-        broker_file = pd.read_excel(os.path.join(broker_folder_path, filename), usecols=[broker_load_number_col, broker_total_amount_col])
+        broker_file = pd.read_excel(os.path.join(broker_folder_path, filename), usecols=[broker_load_number_col, broker_total_amount_col, broker_date_col])
         broker_files.append(broker_file)
     broker_df = pd.concat(broker_files) #Creating here a bigass excel file 
 
     #print(trucker_df)
 
-    trucker_df = trucker_df.rename(columns={trucker_load_number_col: 'Load_Number', trucker_date_col: 'Date', trucker_total_amount_col: 'Trucker_Amount'})
-    broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount'})
+    trucker_df = trucker_df.rename(columns={trucker_load_number_col: 'Load_Number', trucker_date_col: 'Date_trucker', trucker_total_amount_col: 'Trucker_Amount'})
+    broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount' , broker_date_col: 'Date_broker'})
 
     #print(trucker_df)
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
@@ -76,6 +77,7 @@ def duplicates_with_only_payed_loads():
     trucker_date_col = 'DATE'
     trucker_total_amount_col = 'TOTAL'
     broker_total_amount_col = 'Amount paid on load'
+    broker_date_col = 'ACH Date'
 
     # Load all the trucker and broker files into dataframes
     trucker_files = []
@@ -89,13 +91,13 @@ def duplicates_with_only_payed_loads():
 
     broker_files = []
     for filename in os.listdir(broker_folder_path):
-        broker_file = pd.read_excel(os.path.join(broker_folder_path, filename), usecols=[broker_load_number_col, broker_total_amount_col])
+        broker_file = pd.read_excel(os.path.join(broker_folder_path, filename), usecols=[broker_load_number_col, broker_total_amount_col, broker_date_col])
         broker_files.append(broker_file)
     broker_df = pd.concat(broker_files) #Creating here a bigass excel file 
 
     
-    trucker_df = trucker_df.rename(columns={trucker_load_number_col: 'Load_Number', trucker_date_col: 'Date', trucker_total_amount_col: 'Trucker_Amount'})
-    broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount'})
+    trucker_df = trucker_df.rename(columns={trucker_load_number_col: 'Load_Number', trucker_date_col: 'Date_Trucker', trucker_total_amount_col: 'Trucker_Amount'})
+    broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount', broker_date_col: 'Date_Broker'})
 
     #print(trucker_df)
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
