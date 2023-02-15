@@ -55,12 +55,20 @@ def generate_payments():
     #print(trucker_df)
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
 
+    mask = trucker_df['Load_Number'].isin(broker_df['Load_Number'])
+                              
+    result3 = trucker_df[~mask]
+    
+    mask2 = result3['Load_Number'].notnull()
+    
+    result3 = result3[mask2]
+              
 
     print("LOADS THAT ALREADY PAID")
     print("*******************************************")
     print(result)
-    result.to_excel('Payments completed.xlsx');
-
+    result.to_excel('Payments completed.xlsx')
+    result3.to_excel('Payments NOT completed.xlsx')
 
 
 #This function will create a duplicate of trucker folder with the same files but the data inside the file will be 
@@ -70,6 +78,7 @@ def duplicates_with_only_payed_loads():
     trucker_folder_path = './trucker'
     broker_folder_path = './broker'
     trucker_files_paid_only = './trucker_only_paid_loads'
+    trucker_files_not_paid = './truckers_only_not_paid_loads'
 
     # Define the names of the columns in the excel files
     trucker_load_number_col = 'ORIGIN TICKET #'
@@ -106,10 +115,22 @@ def duplicates_with_only_payed_loads():
         excel_files = excel_files.rename(columns={trucker_load_number_col: 'Load_Number'})
         
         result2 = pd.merge(excel_files , result , on ='Load_Number', how ='inner')
+        
+        mask = excel_files['Load_Number'].isin(result['Load_Number'])
+        
+        result3 = excel_files[~mask]
+        
+        mask2 = result3['Load_Number'].notnull()
+    
+        result3 = result3[mask2]
+        
                         
         result2.to_excel(trucker_files_paid_only+"/"+name)
                         #'./trucker_only_paid_loads'/ Filename
-
+        
+        result3.to_excel(trucker_files_not_paid+"/"+name)
+              
+    
 
 generate_payments()
 duplicates_with_only_payed_loads()
