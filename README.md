@@ -1,6 +1,7 @@
 # Load Payment Tracker
 This program will alayze two files to check if loads are paid.
 
+## Original Goals 
 This software will check two excel files to check if loads are paid and generate an 3 excel files.
 
 First excel file will be the trucker owner with loads paid mark in yellow.
@@ -9,9 +10,17 @@ Second excel file will be the dispatcher with loads paid mark in yellow.
 
 Third excel file will be a convination of the two files mathcing the loads and the price of tucker owner and dispacher.
 
+## Current Goals 
+
+The sofware checks two excel files if loads are paid and generate two outputs.
+
+First output is: "Payments completed.xlsx " that file will contain all the loads paid in one excel file. 
+
+Second output is: The files from trucker but with only loads paids inside the excel file and keeping the original names and files  to keep control of files.
+
 ## How To Use 
 
-* Requierements
+### Requierements
 
 The program needs 3 folders to exist in order to work  (broker, trucker, trucker_only_paid_loads)
 
@@ -22,7 +31,7 @@ The broker excel files in the folder "broker"
 The folder trucker_only_paid_loads it would be empty.
 
 
-* How to Run
+### How to Run
 
 1. Add the excel files into the specified folders 
 
@@ -31,7 +40,7 @@ The folder trucker_only_paid_loads it would be empty.
 3. Wait for output 
 
 
-* Expected Output
+### Expected Output
 
 The program will generate two outputs:
 
@@ -39,8 +48,13 @@ First output is: "Payments completed.xlsx " that file will contain all the loads
 
 Second output is: The files from trucker but with only loads paids inside the excel file and keeping the original names and files  to keep control of files.
 
+# ADVISE THIS ONLY WORKS WITH AN SPECIFIC FORMAT
+ 
+broker file you need to have a Load number and Amount in your excel files.
 
+trucker file you need to have a Date , Load number , Amount in your excel files.
 
+## ! EDIT THE LABEL NAMES FROM THE load.py TO MATCH YOUR COLUMS NAMES !
 
 Copyright all rights reserve for contributors.
 
