@@ -19,6 +19,7 @@
 # #This function will call all the required funcitons to run the program
 import pandas as pd
 import os
+import numpy as np
 
 def generate_payments():
     # Define the folder paths for the trucker and broker files
@@ -26,12 +27,18 @@ def generate_payments():
     broker_folder_path = './broker'
 
     # Define the names of the columns in the excel files
+    
+    ####################### EDIT FOR BROKER #############################
+    broker_total_amount_col = 'Line_Amt'
+    broker_date_col = 'Pay_Date'
+    broker_load_number_col = 'Car_Truck_ID'
+    
+    #############################################
+    
     trucker_load_number_col = 'ORIGIN TICKET #'
-    broker_load_number_col = 'Load number'
     trucker_date_col = 'DATE'
     trucker_total_amount_col = 'TOTAL'
-    broker_total_amount_col = 'Amount paid on load'
-    broker_date_col = 'ACH Date'
+   
 
     # Load all the trucker and broker files into dataframes
     trucker_files = []
@@ -53,7 +60,11 @@ def generate_payments():
     broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount' , broker_date_col: 'Date_broker'})
 
     #print(trucker_df)
+    #OG RESULT result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
+    result['match'] = (abs(result['Trucker_Amount'] - result['Broker_Amount']) <= 2)
+    result['result'] = np.where(result['match'] == True, 'MATCH', 'Discrepancy')
+
 
     mask = trucker_df['Load_Number'].isin(broker_df['Load_Number'])
                               
@@ -81,16 +92,24 @@ def duplicates_with_only_payed_loads():
     trucker_files_not_paid = './truckers_only_not_paid_loads'
 
     # Define the names of the columns in the excel files
+    
+    
+    ####################### EDIT FOR BROKER #############################
+    broker_load_number_col = 'Car_Truck_ID'
+    broker_total_amount_col = 'Line_Amt'
+    broker_date_col = 'Pay_Date'
+    
+    
     trucker_load_number_col = 'ORIGIN TICKET #'
-    broker_load_number_col = 'Load number'
     trucker_date_col = 'DATE'
     trucker_total_amount_col = 'TOTAL'
-    broker_total_amount_col = 'Amount paid on load'
-    broker_date_col = 'ACH Date'
+    
+     #############################################
 
     # Load all the trucker and broker files into dataframes
     trucker_files = []
     entire_trucker_files = [] 
+    
     for filename in os.listdir(trucker_folder_path):
         trucker_file = pd.read_excel(os.path.join(trucker_folder_path, filename), usecols=[trucker_load_number_col, trucker_date_col, trucker_total_amount_col])
         entire_trucker_file = pd.read_excel(os.path.join(trucker_folder_path, filename)) #This Line stores the entire row of the excel file 
@@ -114,16 +133,24 @@ def duplicates_with_only_payed_loads():
     for excel_files,name in entire_trucker_files:
         excel_files = excel_files.rename(columns={trucker_load_number_col: 'Load_Number'})
         
+        
+        
         result2 = pd.merge(excel_files , result , on ='Load_Number', how ='inner')
         
         mask = excel_files['Load_Number'].isin(result['Load_Number'])
         
         result3 = excel_files[~mask]
         
+        
+        
         mask2 = result3['Load_Number'].notnull()
     
         result3 = result3[mask2]
         
+        
+        result2['match'] = (abs(result2['Trucker_Amount'] - result2['Broker_Amount']) <= 2)
+        result2['result'] = np.where(result2['match'] == True, 'MATCH', 'Discrepancy')
+
                         
         result2.to_excel(trucker_files_paid_only+"/"+name)
                         #'./trucker_only_paid_loads'/ Filename
