@@ -22,6 +22,7 @@ import os
 import numpy as np
 
 def generate_payments():
+    
     # Define the folder paths for the trucker and broker files
     trucker_folder_path = './trucker'
     broker_folder_path = './broker'
@@ -80,7 +81,9 @@ def generate_payments():
     print(result)
     result.to_excel('Payments completed.xlsx')
     result3.to_excel('Payments NOT completed.xlsx')
-
+    
+    
+    
 
 #This function will create a duplicate of trucker folder with the same files but the data inside the file will be 
 #Only the loads paid from that file
@@ -130,6 +133,16 @@ def duplicates_with_only_payed_loads():
     #print(trucker_df)
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
 
+    local = result
+    temporal = result.duplicated(subset=['Load_Number'], keep = False)
+    
+    local = local[temporal]
+    local.to_excel('No Dup.xlsx')
+
+    temporal.to_excel('Dup.xlsx')
+
+
+
     for excel_files,name in entire_trucker_files:
         excel_files = excel_files.rename(columns={trucker_load_number_col: 'Load_Number'})
         
@@ -151,16 +164,64 @@ def duplicates_with_only_payed_loads():
         result2['match'] = (abs(result2['Trucker_Amount'] - result2['Broker_Amount']) <= 2)
         result2['result'] = np.where(result2['match'] == True, 'MATCH', 'Discrepancy')
 
-                        
+        local2 = result3.duplicated(subset=['Load_Number'], keep = False)
+        local2 = result3[local2]
+        local2.to_excel('./test/'+name+'.xlsx')
+                
         result2.to_excel(trucker_files_paid_only+"/"+name)
                         #'./trucker_only_paid_loads'/ Filename
         
         result3.to_excel(trucker_files_not_paid+"/"+name)
               
+
+#NOTA PARA ALEXIS ESTA PARTE DEL CODIGO AHORITA ES ESTE MOMENTO SE ME HACE ETERNA SI EL CODIGO YA FUNCIONA
+# MARZO 31 2023
+
+#ALEXIS DEL FUTURO ACABA ESTA PARTE DEL CODIGO ASAP 
+
+def fixed_payments():
+    # Define the folder paths for the trucker and broker files
+    trucker_paided = './trucker_only_paid_loads'
+    claims = './claims_fixed'
+
+    # Define the names of the columns in the excel files
+    
+    
+    ####################### EDIT FOR BROKER #############################
+    claims_date = 'DATE'
+    claims_deposit = 'AMMOUNT DEPOSITED'
+    claims_ticket = 'ORIGIN TICKET #'
+ 
+        
+    trucker_load_number_col = 'ORIGIN TICKET #'
+    trucker_date_col = 'DATE'
+    trucker_total_amount_col = 'TOTAL'
+
+
+    trucker_files=[]
+    entire_trucker_files=[]
+
+    #opening the files in trucker paid loads 
+    for filename in os.listdir(trucker_paided):
+        trucker_file = pd.read_excel(os.path.join(trucker_paided, filename), usecols=[trucker_load_number_col, trucker_date_col, trucker_total_amount_col])
+        entire_trucker_file = pd.read_excel(os.path.join(trucker_paided, filename)) #This Line stores the entire row of the excel file 
+        trucker_files.append(trucker_file)
+        entire_trucker_files.append((entire_trucker_file,filename))
+
+    #Opening the files in claims fixed 
+
+    for filename in os.listdir(claims):
+        claim_file = pd.read_excel()
+
     
 
+
+
+
+#Calling the programs 
 generate_payments()
 duplicates_with_only_payed_loads()
+#fixed_payments()
 
 
 
