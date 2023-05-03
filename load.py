@@ -16,6 +16,8 @@
 #  \/   |_|  \__,_|\___|_|\_\___|_|          
                                    
 #By Alexis
+#Commercial use only through licensing. Please contact my email for details.
+#2023 Copyright
 
 # #Load Payment Tracker
 # #Goals:
@@ -67,6 +69,7 @@ def generate_payments():
     #Ensure that all the files have the same headers to join togheter to ensure 
     #not data corruption
     
+    #Replace this or remove it depenging on your needs 
     new_headers = ['CUSTOMER', 'DATE', 'BOL#', 'ORIGIN', 'ORIGIN TICKET #', 'ORIGIN WEIGHT', 'DESTINATION', 'DESTINATION TICKET #', 'DESTINATION WEIGHT', 'BUSHEL / TONS', 'FREIGH RATE', 'TOTAL']
 
     # loop through all the subfolders and files in the root folder
