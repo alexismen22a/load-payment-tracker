@@ -122,6 +122,9 @@ def generate_payments():
     result['match'] = (abs(result['Trucker_Amount'] - result['Broker_Amount']) <= 2)
     result['result'] = np.where(result['match'] == True, 'MATCH', 'Discrepancy')
 
+    discrepancies = result[result['result']== 'Discrepancy']
+
+    discrepancies.to_excel("./total payment discrepancies.xlsx")
 
     #Creating the complete and not completed payment loads
     mask = trucker_df['Load_Number'].isin(broker_df['Load_Number'])
