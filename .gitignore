@@ -6,3 +6,6 @@ credentials.json
 mail20.py 
 mail30.py
 getemail.py
+Email_retriever.py
+Autofiller.py
+*.csv

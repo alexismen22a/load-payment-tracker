@@ -80,7 +80,7 @@ def generate_payments():
             # construct the full file path
                 file_path = os.path.join(root, file)
             # read the Excel file into a DataFrame
-                df = pd.read_excel(file_path, header=None)
+                df = pd.read_excel(file_path, header=None , engine= 'openpyxl')
             # replace the first row with the new column headers
                 df.iloc[0] = new_headers
             # save the modified DataFrame back to the Excel file
@@ -117,6 +117,22 @@ def generate_payments():
     trucker_df = trucker_df.rename(columns={trucker_load_number_col: 'Load_Number', trucker_date_col: 'Date_trucker', trucker_total_amount_col: 'Trucker_Amount'})
     broker_df = broker_df.rename(columns={broker_load_number_col: 'Load_Number', broker_total_amount_col: 'Broker_Amount' , broker_date_col: 'Date_broker'})
 
+    broker_df.to_excel("Raw Payments.xlsx")
+
+# ZIAD IDEA JUN 7 2023
+
+    # anotherdf = trucker_df[['Load_Number' , 'Date_trucker' , "Trucker_Amount"]]
+    
+    # anotherdf = anotherdf.rename(columns={'Load_Number': 'Load_Number', 'Date_trucker' : 'Date_broker', 'Trucker_Amount' : 'Broker_Amount'})
+    
+    # anotherdf.to_excel("rawtrucker.xlsx")
+    # broker_df.to_excel("rawbroker.xlsx")
+
+    # thrdf = broker_df.compare(anotherdf)
+    # thrdf.to_excel("Ziadidea.xlsx")
+    
+# END ZIAD IDEA
+
     #Checking if the data matches what the broker says 
     result = pd.merge(trucker_df , broker_df , on ='Load_Number', how ='inner')
     result['match'] = (abs(result['Trucker_Amount'] - result['Broker_Amount']) <= 2)
@@ -135,10 +151,43 @@ def generate_payments():
     
     result3 = result3[mask2]
               
+    # 2023 NOV 25
+
+    value_counts = result['result'].value_counts()
+
+    # Calculate the percentage of each value
+    percentages = result['result'].value_counts(normalize=True) * 100
+
+    # Combine the counts and percentages into one DataFrame for easy viewing
+    summary = pd.DataFrame({'Count': value_counts, 'Percentage': percentages})
+
+    
+    # Filter out the rows where result is 'Discrepancy'
+    discrepancies = result[result['result'] == 'Discrepancy']
+
+    # Count where Broker_Amount is greater than Trucker_Amount
+    broker_greater_count = discrepancies[discrepancies['Broker_Amount'] > discrepancies['Trucker_Amount']].shape[0]
+
+    # Count where Trucker_Amount is greater than Broker_Amount
+    trucker_greater_count = discrepancies[discrepancies['Trucker_Amount'] > discrepancies['Broker_Amount']].shape[0]
+
+    # DataFrame where Broker_Amount is greater
+    broker_greater_df = discrepancies[discrepancies['Broker_Amount'] > discrepancies['Trucker_Amount']]
+
+    # DataFrame where Trucker_Amount is greater
+    trucker_greater_df = discrepancies[discrepancies['Trucker_Amount'] > discrepancies['Broker_Amount']]
+
+    broker_greater_df.to_excel('./Payment_Discrepancies_File/Broker_discrepancies.xlsx' , index = False)
+
+    trucker_greater_df.to_excel('./Payment_Discrepancies_File/Trucker_discrepancies.xlsx' , index = False)
 
     print("LOADS THAT ALREADY PAID ")
     print("*******************************************")
     print(result)
+    print(summary)
+    print("Number of discrepancies where Broker_Amount is greater:", broker_greater_count)
+    print("Number of discrepancies where Trucker_Amount is greater:", trucker_greater_count)
+
     result.to_excel('Payments completed.xlsx')
     result3.to_excel('Payments NOT completed.xlsx')
     
@@ -393,6 +442,11 @@ def fixed_payments():
 generate_payments()
 duplicates_with_only_payed_loads()
 #fixed_payments()
+
+def outsidecaller():
+    generate_payments()
+    duplicates_with_only_payed_loads()
+    
 
 
 
